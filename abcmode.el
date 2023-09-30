@@ -27,6 +27,8 @@
 
 ;;; Code:
 
+(require 'rx)
+
 (define-minor-mode abc-mode
   "Toggle ABc mode.
 Minor mode enabling automatic correction of misspelled capital
@@ -36,7 +38,8 @@ words, i.e. WIlliam -> William."
       (remove-hook 'after-change-functions  'abc-maybe-capitalize  t)
     (add-hook 'after-change-functions 'abc-maybe-capitalize  nil  t)))
 
-(defvar abc--regexp "\\b[[:upper:]][[:upper:]]\\([[:lower:]]+\\)\\b"
+(defvar abc--regexp
+  (rx word-boundary upper upper (group (1+ lower)) word-boundary)
   "Regexp used to identify misspelled words.")
 
 (defun abc-maybe-capitalize (start end length)
