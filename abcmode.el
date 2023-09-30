@@ -39,17 +39,34 @@ words, i.e. WIlliam -> William."
       (remove-hook 'after-change-functions  'abc-maybe-capitalize  t)
     (add-hook 'after-change-functions 'abc-maybe-capitalize  nil  t)))
 
+;; TODO Make "end s" optional
+
 (defvar abc--regexp
   (rx word-boundary
+      ;; Correct word if it matches....
+      ;; A - SOME UPPER, one lower which is not an s
+      ;; B - SOME UPPER, some lower
+      ;; B variant - SOME UPPER, some lower, s
+      ;; C - SOME UPPER, some lower, SOME UPPER, anything (CamelCase)
+      ;; D - one lower, SOME UPPER, anything
+      ;; E - ONE UPPER; some lower, SOME UPPER, anything
       (or
-       ;; case 1: 2 or more times uppercase at the beginning
-       (>= 2 upper)
-       ;; case 2: some lower, then upper
-       (and (one-or-more lower)
-            (one-or-more upper)))
-      ;; in any case: there has to be a lower ending
-      (group (1+ lower))
-      (not ?s) ;; but NO ending S
+       (and (>= 2 upper)
+            (or (and (in "a-r" "t-z")) ;; A
+                (and (>= 2 lower) (zero-or-one ?s)) ;; B and B variant
+                (and (one-or-more lower) ;; C
+                     (>= 2 upper)
+                     (zero-or-more not-newline))))
+       ;; D
+       (and lower
+            (one-or-more upper)
+            (zero-or-more not-newline))
+       ;; E
+       (and upper
+            (one-or-more lower)
+            (>= 2 upper)
+            (zero-or-more not-newline)))
+      ;;
       word-boundary)
   "Regexp used to identify misspelled words.")
 
