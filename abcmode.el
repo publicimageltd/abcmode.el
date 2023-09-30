@@ -37,14 +37,15 @@ words, i.e. WIlliam -> William."
     (add-hook 'after-change-functions 'abc-maybe-capitalize  nil  t)))
 
 (defvar abc--regexp "\\b[[:upper:]][[:upper:]]\\([[:lower:]]+\\)\\b"
-  "Regexp used to identify these words which ABC-modes is supposed to correct.")
+  "Regexp used to identify misspelled words.")
 
 (defun abc-maybe-capitalize (start end length)
   "Maybe capitalize the word at point.
-Use START, END and LENGTH as it is passed by `after-change-function'."
+Use START, END and LENGTH as it is passed by the hook
+`after-change-functions'."
   (ignore start end)
   (when  (zerop length) ;; insertion
-   (save-match-data
+       (save-match-data
      (let* ((point (point))
             (case-fold-search nil) ;; do not ignore case
             (match (re-search-backward abc--regexp (point-at-bol) t)))
@@ -52,6 +53,9 @@ Use START, END and LENGTH as it is passed by `after-change-function'."
          (goto-char match)
          (capitalize-word 1))
        (goto-char point)))))
+
+# Correct the words in the regionn from START to END
+
 
 (provide 'abcmode)
 ;;; abcmode.el ends here
