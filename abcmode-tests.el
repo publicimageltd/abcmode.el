@@ -3,7 +3,6 @@
 ;; Copyright (C) 2020-2022
 
 ;; Author:  <joerg@joergvolbers.de>
-;; Keywords: 
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,39 +19,77 @@
 
 ;;; Commentary:
 
-;; Tests for abcmode.el.
+;; Tests for abcmode.el. This is not a regular test suite, just
+;; run `abc--testsuite' manually in the buffer.
 
 ;;; Code:
+(require 'abcmode)
+(require 'cl-lib)
 
-(defun abc--test-for-x (regexp string-to-test)
-  (let ((case-fold-search nil))
-  (insert (format "For string '%s': %s\t\n" 
-		  string-to-test 
-		  (if (string-match regexp string-to-test) 
-		      (if (match-string 1 string-to-test)
-			  (capitalize (match-string 0 string-to-test))
-			(downcase (match-string 0 string-to-test)))
-		    (concat string-to-test " (no match)"))))))
+(defun abc--test-for-x (regexp string match-expected)
+  "Insert result of applying REGEXP to STRING in current buffer.
+Colorize output green if REGEXP matches and MATCH-EXPECTED is
+non-nil."
+  (let* ((case-fold-search nil)
+         (match (not (not (string-match regexp string))))
+         (result (if match (capitalize string) string))
+         (expected? (eql match match-expected))
+         (s (concat string
+                    (make-string (- 20 (length string)) ? )
+                    (propertize result
+                                'face
+                                (if expected? 'success 'error))
+                    (make-string (- 20 (length string)) ? )
+                    (format "(%s, %s)"
+                            (if match "match" "no match")
+                            (propertize 
+                             (if match-expected "match expected" "no match expected")
+                             'face
+                             (if expected? 'success 'error))))))
+    (let (start end)
+      (setq start (point))
+      (insert s "\n")
+      (setq end (point))
+      (if (cl-oddp (line-number-at-pos start))
+          (add-face-text-property start end 'hl-line)))))
+
+(defun abc--test (s expected)
+  "Test S against `abc--regexp', inserting the results.
+S is the string, and EXPECTED if a match is expected."
+  (abc--test-for-x abc--regexp s expected))
 
 (defun abc--testsuite ()
+  "Show a buffer with matches against `abc--regexp'."
   (interactive)
   (let ((tempbufname "**abc testsuite***"))
   (with-output-to-temp-buffer tempbufname
     (set-buffer tempbufname)
-    (abc--test-for-x abc--regexp "Normal")
-    (abc--test-for-x abc--regexp "BLatt")
-    (abc--test-for-x abc--regexp "BLatts")
-    (abc--test-for-x abc--regexp "BLätter")    
-    (abc--test-for-x abc--regexp "BLätters")    
-    (abc--test-for-x abc--regexp "CDs")
-    (abc--test-for-x abc--regexp "PDFs")
-    (abc--test-for-x abc--regexp "kAnt")
-    (abc--test-for-x abc--regexp "McDowell")
-    (abc--test-for-x abc--regexp "MCDowell")    
-    (abc--test-for-x abc--regexp "GROSS")
-    (abc--test-for-x abc--regexp "nichts")
-    (abc--test-for-x abc--regexp "12XYaa"))))
-
+    (pcase-dolist (`(,s ,exp)
+                    '(("Normal" nil)
+                      ("BLatt"  t)
+                      ("BLatts" t)
+                      ("BLätter" t)
+                      ("bLätter" t)
+                      ("BLätters" t)
+                      ("Cn" nil)
+                      ("CC" nil)
+                      ("CCn" t)
+                      ("CDs" nil)
+                      ("PDFs" nil)
+                      ("xPDF" t)
+                      ("xPDFs" t)
+                      ("PDFn" t)
+                      ("kleinUND" nil)
+                      ("PDFmitBINNEN" t)
+                      ("PDFmitBINNENs" t)
+                      ("CamelCase" nil)
+                      ("McDOwell" t)
+                      ("McDowell" nil)
+                      ("GROSS" nil)
+                      ("klein" nil)
+                      ("12xyaa" nil)))
+      (abc--test s exp))
+    (insert "\n "))))
 
 
 (provide 'abcmode-tests)
