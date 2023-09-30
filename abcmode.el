@@ -3,7 +3,9 @@
 ;; Copyright (C) 2020
 
 ;; Author:  <joerg@joergvolbers.de>
+;; Version: 0.1
 ;; Keywords: convenience
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -19,6 +21,10 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; A minor mode which automatically corrects misspelled capital words,
+;; e.g. 'WOrd' -> 'Word'.
+
 ;;; Code:
 
 (define-minor-mode abc-mode
