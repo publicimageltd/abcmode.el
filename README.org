@@ -12,7 +12,7 @@ For example, =eMacs= or =wIilliam= get corrected to
 
 The following rules apply:
  - Correct all words where the first character is lower case, but the
-   second one upper case, e.g =eMacs= -> =Emacs=. Such a pattern is
+   second one upper case, e.g =eMacs= $\rightarrow$ =Emacs=. Such a pattern is
    undestood as meaning 'the user hit the shift key too late'.
  - Correct all words which are all upper case and have a lower-case
    ending (which is not s, see below), e.g. =PDf= -> =PDF=.
