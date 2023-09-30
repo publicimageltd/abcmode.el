@@ -12,13 +12,14 @@ For example, =eMacs= or =wIilliam= get corrected to
 
 The following rules apply:
  - Correct all words where the first character is lower case, but the
-   second one upper case, e.g =eMacs= $\rightarrow$ =Emacs=. Such a pattern is
-   undestood as meaning 'the user hit the shift key too late'.
+   second one if upper case. E.g =eMacs= $\rightarrow$ =Emacs=. Such a
+   pattern is undestood as meaning 'the user hit the shift key too
+   late'.
  - Correct all words which are all upper case and have a lower-case
-   ending (which is not s, see below), e.g. =PDf= -> =PDF=.
+   ending (which is not s, see below), e.g. =Pdf= $\rightarrow$ =PDF=.
  - Correct all words where the first character is upper case, then
    there are some lower case characters, and then there are several
-   upper cases (such as =McBETh=, which is corrected =Mcbeth=).
+   upper cases (such as =McBETh=, which is corrected to =Mcbeth=).
  - Do /not/ correct words which are all upper case, but end with an =s=
    (such as =PDFs=).
  - Do /not/ correct =CamelCased= words (so =McBeth= remains =McBeth=).
