@@ -23,7 +23,8 @@
 ;;; Commentary:
 
 ;; A minor mode which automatically corrects misspelled capital words,
-;; e.g. 'WOrd' -> 'Word'.
+;; e.g. 'WOrd' -> 'Word'.  Do not correct words which are all
+;; uppercase, but end with a lower-case 's' (like 'PDFs'.)
 
 ;;; Code:
 
