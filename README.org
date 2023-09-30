@@ -29,6 +29,8 @@ optimized for readability, not for speed.
 
 ** Setup
 
+=abcmode.el= is currently not on MELPA or ELPA.
+
 Add =abcmode.el= to your load-path and call:
 
 #+begin_src emacs-lisp
