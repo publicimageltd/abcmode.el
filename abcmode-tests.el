@@ -28,18 +28,18 @@
 
 (defun abc--test-for-x (regexp string match-expected)
   "Insert result of applying REGEXP to STRING in current buffer.
-Colorize output green if REGEXP matches and MATCH-EXPECTED is
-non-nil."
+Colorize output green if MATCH is equal to MATCH-EXPECTED."
   (let* ((case-fold-search nil)
          (match (not (not (string-match regexp string))))
          (result (if match (capitalize string) string))
          (expected? (eql match match-expected))
+         (pad       (make-string (- 20 (length string)) ? ))
          (s (concat string
-                    (make-string (- 20 (length string)) ? )
+                    pad
                     (propertize result
                                 'face
                                 (if expected? 'success 'error))
-                    (make-string (- 20 (length string)) ? )
+                    pad
                     (format "(%s, %s)"
                             (if match "match" "no match")
                             (propertize 
