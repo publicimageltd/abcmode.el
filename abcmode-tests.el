@@ -1,6 +1,6 @@
 ;;; abcmode-tests.el --- tests for abcmode           -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020  
+;; Copyright (C) 2020-2022
 
 ;; Author:  <joerg@joergvolbers.de>
 ;; Keywords: 
@@ -20,13 +20,9 @@
 
 ;;; Commentary:
 
-;; 
+;; Tests for abcmode.el.
 
 ;;; Code:
-
-
-;; --------------------------------------------------------------------------------
-;; Ab hier Tests.
 
 (defun abc--test-for-x (regexp string-to-test)
   (let ((case-fold-search nil))
