@@ -48,7 +48,7 @@ Use START, END and LENGTH as it is passed by the hook
        (save-match-data
      (let* ((point (point))
             (case-fold-search nil) ;; do not ignore case
-            (match (re-search-backward abc--regexp (point-at-bol) t)))
+            (match (re-search-backward abc--regexp (line-beginning-position) t)))
        (when (and match (not (string= "s" (match-string 1))))
          (goto-char match)
          (capitalize-word 1))
