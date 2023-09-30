@@ -1,0 +1,66 @@
+* ABc Mode
+
+Buffer-local minor mode which automatically corrects mis-capitalized
+words.
+
+When active, this minor mode automatically corrects words the spelling
+of which suggests that the user actually wanted a regularly
+capitalized word. For example, =eMacs= or =wIilliam= get corrected to
+=Emacs= and =William=.
+
+The following rules apply:
+ - Correct all words where the first character is lower case, but the
+   second one upper case, e.g =eMacs= -> =Emacs=. Such a pattern is
+   undestood as meaning 'the user hit the shift key too late'.
+ - Correct all words which are all upper case and have a lower-case
+   ending (which is not s, see below), e.g. =PDf= -> =PDF=.
+ - Correct all words where the first character is upper case, then
+   there are some lower case characters, and then there are several
+   upper cases (such as =McBETh=, which is corrected =Mcbeth=).
+ - Do /not/ correct words which are all upper case, but end with an =s=
+   (such as =PDFs=).
+ - Do /not/ correct =CamelCased= words (so =McBeth= remains =McBeth=).
+
+The rules are put in one single regexp (=abc--regexp=) which is
+optimized for readability, not for speed.
+
+** Setup
+
+Add =abcmode.el= to your load-path and call:
+
+#+begin_src emacs-lisp
+(require 'abcmode)
+#+end_src
+
+Turn the minor-mode on with =M-x abc-mode=.
+
+It is recommended to add ABc-mode to all text-related modes:
+
+#+begin_src emacs-lisp
+(use-package
+   :hook (text-mode . abc-mode))
+#+end_src
+
+** Further ideas for improvements
+
+ - Instead of hard-coding complicated patterns, just check for the
+   easy cases and then use a list of words for the special cases to be
+   ignored (such as "PDFs").
+ - Actually correct mis-capitalized CamelCase correctly, for the scots
+   among us: =McDOwell= -> =McDowell=.
+ - Restrict correction (and scanning) to comments in all =prog-mode=
+   based buffers. Currently, =abc-mode= is not usable in =prog-mode=
+   buffers because it ignores the syntax.
+
+** Tests
+
+This is a toy project, so you might want to play around with it!
+
+If you want to play around with the regexp, you might want to use the function
+=abc--testsuite= which is provided in =abcmode-tests.el=. It poduces a
+list with strings and if the regexp matched.
+
+** Changelog
+
+ - 9/2023 :: Improved regexp and tests; upload to Github.
+ - 2020 :: First version, since then in regular private use.
