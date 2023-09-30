@@ -5,7 +5,9 @@ words.
 
 When active, this minor mode automatically corrects words the spelling
 of which suggests that the user actually wanted a regularly
-capitalized word. For example, =eMacs= or =wIilliam= get corrected to
+capitalized word. 
+
+For example, =eMacs= or =wIilliam= get corrected to
 =Emacs= and =William=.
 
 The following rules apply:
