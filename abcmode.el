@@ -39,7 +39,17 @@ words, i.e. WIlliam -> William."
     (add-hook 'after-change-functions 'abc-maybe-capitalize  nil  t)))
 
 (defvar abc--regexp
-  (rx word-boundary upper upper (group (1+ lower)) word-boundary)
+  (rx word-boundary
+      (or
+       ;; case 1: 2 or more times uppercase at the beginning
+       (>= 2 upper)
+       ;; case 2: some lower, then upper
+       (and (one-or-more lower)
+            (one-or-more upper)))
+      ;; in any case: there has to be a lower ending
+      (group (1+ lower))
+      (not ?s) ;; but NO ending S
+      word-boundary)
   "Regexp used to identify misspelled words.")
 
 (defun abc-maybe-capitalize (start end length)
@@ -48,17 +58,16 @@ Use START, END and LENGTH as it is passed by the hook
 `after-change-functions'."
   (ignore start end)
   (when  (zerop length) ;; insertion
-       (save-match-data
-     (let* ((point (point))
-            (case-fold-search nil) ;; do not ignore case
-            (match (re-search-backward abc--regexp (line-beginning-position) t)))
-       (when (and match (not (string= "s" (match-string 1))))
-         (goto-char match)
-         (capitalize-word 1))
-       (goto-char point)))))
+    (save-match-data
+      (let* ((point (point))
+             (case-fold-search nil) ;; do not ignore case
+             (match (re-search-backward abc--regexp (line-beginning-position) t)))
+        (when match
+          (goto-char match)
+          (capitalize-word 1))
+        (goto-char point)))))
 
-# Correct the words in the regionn from START to END
-
+;; # Correct the words in the regionn from START to END
 
 (provide 'abcmode)
 ;;; abcmode.el ends here
