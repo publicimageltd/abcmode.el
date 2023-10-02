@@ -67,5 +67,6 @@ list with strings and if the regexp matched.
 
 ** Changelog
 
+ - 9/2023 :: Do not correct in org-mode src blocks
  - 9/2023 :: Improved regexp and tests; upload to Github.
  - 2020 :: First version, since then in regular private use.

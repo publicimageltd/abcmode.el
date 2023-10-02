@@ -75,7 +75,9 @@ words, i.e. WIlliam -> William."
 Use START, END and LENGTH as it is passed by the hook
 `after-change-functions'."
   (ignore start end)
-  (when  (zerop length) ;; insertion
+  (when  (and (zerop length) ;; insertion
+              (and (derived-mode-p 'org-mode)
+                   (not (get-text-property (point) 'src-block))))
     (save-match-data
       (let* ((point (point))
              (case-fold-search nil) ;; do not ignore case
