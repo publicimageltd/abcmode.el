@@ -42,7 +42,7 @@ Colorize output green if MATCH is equal to MATCH-EXPECTED."
                     pad
                     (format "(%s, %s)"
                             (if match "match" "no match")
-                            (propertize 
+                            (propertize
                              (if match-expected "match expected" "no match expected")
                              'face
                              (if expected? 'success 'error))))))
